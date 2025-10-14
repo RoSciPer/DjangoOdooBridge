@@ -1,21 +1,21 @@
-# Telegram Task Manager Showcase
+# DjangoOdooBridge
+### (to Telegram via Webhook)
 
-# Telegram Task Manager - Demo Version
-
-Django-based demonstration system showcasing task management with Telegram integration and Odoo backend.
+A powerful Django-based bridge system that connects Odoo ERP with Telegram Bot API through webhooks, enabling seamless task management and real-time notifications.
 
 ## 🌟 Features
 
-- **Real-time Task Management** - Create, assign, and track tasks
-- **Telegram Integration** - Instant notifications and bot interaction
-- **Odoo Backend** - Professional ERP system integration
-- **User Management** - Add and manage Telegram users
-- **Dashboard Interface** - Clean, responsive UI with Bootstrap 5
-- **Live Demo Access** - Complete working demonstration
+- **🔗 Bridge Architecture** - Seamlessly connects Django ↔ Odoo ↔ Telegram
+- **📱 Webhook Integration** - Real-time Telegram Bot API communication
+- **⚡ Task Management** - Create, assign, and track tasks across systems
+- **👥 User Synchronization** - Manage Telegram users through Odoo ERP
+- **🎯 API Endpoints** - RESTful API for external integrations
+- **📊 Dashboard Interface** - Clean, responsive web interface
+- **🔄 Real-time Updates** - Live data synchronization with caching
 
 ## 🚀 Live Demo
 
-Visit the live demo at: **https://django.bidsolana.xyz/dashboard/**
+Visit the live demo at: **https://django.bidsolana.xyz/
 
 ### Full Odoo Access
 - **URL**: https://demo.bidsolana.xyz/odoo
@@ -26,8 +26,8 @@ Visit the live demo at: **https://django.bidsolana.xyz/dashboard/**
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/telegram-task-manager.git
-cd telegram-task-manager
+git clone https://github.com/rosciper/DjangoOdooBridge.git
+cd DjangoOdooBridge
 ```
 
 2. **Create virtual environment**
@@ -101,7 +101,7 @@ This project is open source and available under the MIT License.
 
 - **Live Demo**: https://django.bidsolana.xyz/dashboard/
 - **Full Odoo Demo**: https://demo.bidsolana.xyz/odoo
-- **GitHub**: https://github.com/yourusername/telegram-task-manager
+- **GitHub**: https://github.com/rosciper/DjangoOdooBridge
 
 ## 🎯 Purpose
 
@@ -148,9 +148,15 @@ python manage.py runserver 0.0.0.0:8080
 
 ## 📱 Features
 
-- [ ] Interactive dashboard
-- [ ] Telegram bot integration
-- [ ] Real-time task updates  
-- [ ] Photo report demo
-- [ ] Multi-language support
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### What this means:
+- ✅ **Free to use** - Personal and commercial use
+- ✅ **Modify freely** - Adapt to your needs  
+- ✅ **Distribute** - Share with others
+- ✅ **Private use** - Use in closed-source projects
+- ⚠️ **No warranty** - Use at your own risk
+- 📋 **Attribution required** - Keep copyright notice
 - [ ] Lead generation forms
