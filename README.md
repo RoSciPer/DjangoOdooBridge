@@ -22,7 +22,15 @@ Visit the live demo at: **https://django.bidsolana.xyz/
 - **Username**: `demo@bidsolana.xyz`
 - **Password**: `123test`
 
-## 🛠️ Installation
+## � Requirements
+
+- **Python 3.12+** with Django 5.2.7
+- **Odoo ERP System** (16.0+ recommended)
+- **Odoo Custom Addon**: `telegram_task_manager_2` 
+- **Telegram Bot** with API token
+- **PostgreSQL/SQLite** database
+
+## �🛠️ Installation
 
 1. **Clone the repository**
 ```bash
@@ -60,6 +68,35 @@ python manage.py runserver
 - `POST /api/create-advanced-task/` - Create new tasks
 - `POST /api/add-telegram-user/` - Add Telegram users
 - `GET /dashboard/` - Main dashboard interface
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐    HTTP/REST     ┌──────────────────┐    XML-RPC      ┌─────────────────┐
+│   Web Browser   │ ◄──────────────► │  Django Bridge   │ ◄─────────────► │   Odoo ERP      │
+│   Dashboard     │                  │  (DjangoOdoo     │                 │   + Custom      │
+└─────────────────┘                  │   Bridge)        │                 │   Addon         │
+                                     └──────────────────┘                 └─────────────────┘
+                                                                                    │
+                                                                                    │ Webhook
+                                                                                    ▼
+                                                                          ┌─────────────────┐
+                                                                          │  Telegram Bot   │
+                                                                          │      API        │
+                                                                          └─────────────────┘
+                                                                                    │
+                                                                                    ▼
+                                                                          ┌─────────────────┐
+                                                                          │   PostgreSQL    │
+                                                                          │   Database      │
+                                                                          └─────────────────┘
+```
+
+**Key Components:**
+- **Django Bridge**: Main API and web interface
+- **Odoo Custom Addon**: `/opt/odoo/custom_addons/telegram_task_manager_2/`
+- **Telegram Bot**: Webhook configured in Odoo, notifications sent via Odoo
+- **Database**: Shared PostgreSQL data layer
 
 ## 🔧 Technologies Used
 
@@ -140,11 +177,10 @@ python manage.py runserver 0.0.0.0:8080
 
 ## 🔗 Related Projects
 
-- **Production System**: `/opt/odoo/custom_addons/telegram_task_manager_2/`
 - **Demo URLs**: 
-  - Production: `https://odoo.bidsolana.xyz`
-  - Demo: `https://demo.bidsolana.xyz` 
-  - Showcase: `https://showcase.bidsolana.xyz` (this project)
+  - Production Odoo: `https://odoo.bidsolana.xyz`
+  - Demo Odoo: `https://demo.bidsolana.xyz` 
+  - Django Bridge: `https://django.bidsolana.xyz` (this project)
 
 ## 📱 Features
 
