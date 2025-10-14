@@ -1,0 +1,896 @@
+<!-- DEMO DASHBOARD -->
+{% extends 'showcase/base.html' %}
+
+{% block title %}Demo Dashboard - Telegram Task Manager{% endblock %}
+
+{% block content %}
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+    .smooth-scroll {
+        scroll-behavior: smooth;
+    }
+    
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+    
+    .real-data-badge {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+    
+    .table-custom {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .table-custom thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .status-badge {
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .status-draft { background-color: #f8f9fa; color: #6c757d; }
+    .status-in_progress { background-color: #cce5ff; color: #0066cc; }
+    .status-completed { background-color: #d4edda; color: #155724; }
+    .status-cancelled { background-color: #f8d7da; color: #721c24; }
+    
+    .table-custom tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+</style>
+<!-- Full Demo Access Banner -->
+<div class="container-fluid mt-3">
+    <div class="alert alert-primary alert-dismissible fade show border-0" role="alert">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="text-center">
+                    <h5 class="alert-heading mb-3">
+                        <i class="fas fa-rocket me-2"></i>Full Demo Access
+                    </h5>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card bg-light border-0">
+                                <div class="card-body p-3">
+                                    <div class="row text-start">
+                                        <div class="col-md-4 mb-2">
+                                            <strong>URL:</strong><br>
+                                            <a href="https://demo.bidsolana.xyz/web/login?login=demo@bidsolana.xyz&password=123test&redirect=/web" target="_blank" class="text-decoration-none">
+                                                demo.bidsolana.xyz (auto-login)
+                                            </a>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <strong>Username:</strong><br>
+                                            <code class="bg-white px-2 py-1 rounded">demo@bidsolana.xyz</code>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <strong>Password:</strong><br>
+                                            <code class="bg-white px-2 py-1 rounded">123test</code>
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-2">
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>Complete Odoo system with full Telegram integration
+                                        </small>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <a href="https://demo.bidsolana.xyz/odoo" target="_blank" class="btn btn-success btn-sm me-2">
+                                            <i class="fas fa-external-link-alt me-1"></i>Open Full Demo
+                                        </a>
+                                        <button class="btn btn-outline-secondary btn-sm" onclick="copyCredentials()">
+                                            <i class="fas fa-copy me-1"></i>Copy Credentials
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</div>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h5>
+                    {% if using_real_data %}
+                        <span class="real-data-badge">
+                            <i class="fas fa-satellite-dish me-1"></i>LIVE DATA
+                        </span>
+                    {% else %}
+                        <span class="badge bg-warning">
+                            <i class="fas fa-exclamation-triangle me-1"></i>Demo Data
+                        </span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <a href="#tasks" class="list-group-item list-group-item-action">
+                            <i class="fas fa-tasks me-2"></i>Tasks
+                        </a>
+                        <a href="#users" class="list-group-item list-group-item-action">
+                            <i class="fas fa-users me-2"></i>Users
+                        </a>
+                        <a href="#reports" class="list-group-item list-group-item-action">
+                            <i class="fas fa-file-alt me-2"></i>Reports
+                        </a>
+                        <a href="#contact" class="list-group-item list-group-item-action">
+                            <i class="fas fa-envelope me-2"></i>Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Demo Actions -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6><i class="fas fa-play me-2"></i>Demo Actions</h6>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-success btn-sm mb-2 w-100" onclick="showAdvancedTaskModal()">
+                        <i class="fas fa-tasks me-1"></i>Create Task
+                    </button>
+                    <button class="btn btn-info btn-sm mb-2 w-100" onclick="showAddUserModal()">
+                        <i class="fab fa-telegram me-1"></i>Add Telegram User
+                    </button>
+                    <button class="btn btn-success btn-sm mb-2 w-100" onclick="simulateReport()">
+                        <i class="fas fa-camera me-1"></i>Simulate Report
+                    </button>
+                    <button class="btn btn-info btn-sm mb-2 w-100" onclick="refreshData()">
+                        <i class="fas fa-sync me-1"></i>Refresh Data
+                    </button>
+                    <a href="https://demo.bidsolana.xyz/odoo" target="_blank" class="btn btn-warning btn-sm w-100">
+                        <i class="fas fa-external-link-alt me-1"></i>Full Demo
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- Tasks Section -->
+            <div id="tasks" class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-tasks me-2"></i>Recent Tasks</h5>
+                    <span class="badge bg-primary">{{ tasks|length }}</span>
+                </div>
+                <div class="card-body">
+                    {% if tasks %}
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Priority</th>
+                                        <th>Assigned User</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for task in tasks %}
+                                    <tr>
+                                        <td><strong>#{{ task.id }}</strong></td>
+                                        <td>
+                                            <strong>{{ task.title }}</strong>
+                                            {% if task.description %}
+                                            <br><small class="text-muted">{{ task.description|truncatechars:50 }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="status-badge status-{{ task.state }}">
+                                                {{ task.state|capfirst }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if task.priority == '3' %}
+                                                <span class="badge bg-danger">🔴 Urgent</span>
+                                            {% elif task.priority == '2' %}
+                                                <span class="badge bg-warning">🟡 High</span>
+                                            {% elif task.priority == '1' %}
+                                                <span class="badge bg-info">🔵 Normal</span>
+                                            {% elif task.priority == '0' %}
+                                                <span class="badge bg-secondary">🟢 Low</span>
+                                            {% else %}
+                                                <span class="badge bg-info">🔵 Normal</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if task.user_display and task.user_display != 'Unassigned' %}
+                                                <strong>{{ task.user_display }}</strong>
+                                                {% if task.telegram_user_id %}
+                                                    <br><small class="text-success"><i class="fab fa-telegram me-1"></i>Telegram Ready</small>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="text-muted">Unassigned</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-4">
+                                            <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                                            No tasks found
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-tasks fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No tasks yet. Create your first demo task!</p>
+                            <button class="btn btn-primary" onclick="createDemoTask()">
+                                <i class="fas fa-plus me-2"></i>Create Demo Task
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Users Section -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div id="users" class="card">
+                        <div class="card-header">
+                            <h6><i class="fas fa-users me-2"></i>Demo Users</h6>
+                        </div>
+                        <div class="card-body">
+                            {% for user in users %}
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="avatar-sm bg-primary rounded-circle d-flex align-items-center justify-content-center me-3">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                    <div>
+                                        <strong>{{ user.first_name }}</strong>
+                                        {% if user.username %}
+                                            <small class="text-muted">@{{ user.username }}</small>
+                                        {% endif %}
+                                        {% if user.is_admin %}
+                                            <span class="badge bg-warning ms-2">Admin</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted">No users yet.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div id="reports" class="card">
+                        <div class="card-header">
+                            <h6><i class="fas fa-file-alt me-2"></i>Recent Reports</h6>
+                        </div>
+                        <div class="card-body">
+                            {% for report in reports %}
+                                <div class="mb-3 p-2 bg-light rounded">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <strong>{{ report.user.first_name }}</strong>
+                                        <small class="text-muted">{{ report.created_at|date:"M d, H:i" }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ report.message|truncatechars:100 }}</p>
+                                    {% if report.photo_url %}
+                                        <i class="fas fa-camera text-info"></i>
+                                        <small class="text-info">Photo attached</small>
+                                    {% endif %}
+                                </div>
+                            {% empty %}
+                                <p class="text-muted">No reports yet.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Section -->
+<div id="contact" class="container-fluid mt-5 py-4 bg-light">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-4">
+                <h4><i class="fas fa-headset me-2"></i>Need Help or Want to Learn More?</h4>
+                <p class="text-muted">Contact us for personalized consultation or support</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center p-3">
+                            <i class="fab fa-whatsapp text-success mb-2" style="font-size: 2rem;"></i>
+                            <h6 class="card-title">WhatsApp Support</h6>
+                            <div class="d-grid gap-1">
+                                <a href="https://wa.me/37126355911?text=Hello! I tried your Telegram Task Manager demo and I'm interested to know more." target="_blank" class="btn btn-success btn-sm">
+                                    <i class="fab fa-whatsapp me-1"></i>EN/LV
+                                </a>
+                                <a href="https://wa.me/37126355911?text=Привет! Я попробовал ваше демо Telegram Task Manager и хочу узнать больше." target="_blank" class="btn btn-outline-success btn-sm">
+                                    <i class="fab fa-whatsapp me-1"></i>RU
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center p-3">
+                            <i class="fas fa-envelope text-primary mb-2" style="font-size: 2rem;"></i>
+                            <h6 class="card-title">Email Us</h6>
+                            <a href="mailto:darzinu17@gmail.com?subject=Telegram Task Manager Demo Inquiry" class="btn btn-primary btn-sm">
+                                <i class="fas fa-envelope me-1"></i>darzinu17@gmail.com
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>Response within 24 hours • 
+                    <i class="fas fa-language me-1"></i>English, Latviešu, Русский
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Telegram User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #0088cc 0%, #005599 100%); color: white;">
+                <h5 class="modal-title">
+                    <i class="fab fa-telegram me-2"></i>Add Telegram User (Demo)
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addUserForm" onsubmit="event.preventDefault(); createTelegramUser();">
+                <div class="modal-body">
+                    <!-- Enhanced Instructions Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <h6 class="card-title text-info">
+                                        <i class="fas fa-search me-2"></i>How to find your Telegram ID
+                                    </h6>
+                                    <ol class="small mb-2">
+                                        <li>Open Telegram app</li>
+                                        <li>Search for <strong>@userinfobot</strong></li>
+                                        <li>Click "START" to begin chat</li>
+                                        <li>Bot will send your numeric ID</li>
+                                        <li>Copy and paste it below</li>
+                                    </ol>
+                                    <div class="text-center">
+                                        <a href="https://t.me/userinfobot" target="_blank" class="btn btn-info btn-sm">
+                                            <i class="fab fa-telegram me-1"></i>Open @userinfobot
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6 class="card-title text-success">
+                                        <i class="fas fa-comments me-2"></i>Demo Environment
+                                    </h6>
+                                    <ul class="small mb-2">
+                                        <li><strong>Demo Testing</strong> - Safe environment</li>
+                                        <li><strong>No Real Messages</strong> - Testing only</li>
+                                        <li><strong>Full Functionality</strong> - All features available</li>
+                                        <li><strong>Reset Anytime</strong> - Data can be cleared</li>
+                                    </ul>
+                                    <div class="alert alert-success small mb-0">
+                                        <i class="fas fa-shield-alt me-1"></i>
+                                        <strong>Safe demo environment!</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Fields -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="userName" class="form-label">
+                                    <i class="fas fa-user me-1"></i>Your Name *
+                                </label>
+                                <input type="text" class="form-control form-control-lg" id="userName" required
+                                       placeholder="Enter your full name">
+                                <div class="form-text">This name will appear in task notifications</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">
+                                    <i class="fas fa-at me-1"></i>Telegram Username
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-info text-white">@</span>
+                                    <input type="text" class="form-control" id="username" 
+                                           placeholder="your_username">
+                                </div>
+                                <div class="form-text text-muted">Optional: Your public username</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="telegramId" class="form-label">
+                            <i class="fas fa-key me-1"></i>Telegram ID *
+                        </label>
+                        <input type="text" class="form-control form-control-lg" id="telegramId" required 
+                               placeholder="e.g., 123456789" pattern="[0-9]+" 
+                               style="font-family: monospace; font-size: 1.1em;">
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Numeric ID from @userinfobot (usually 9-10 digits)
+                        </div>
+                    </div>
+                    
+                    <!-- Demo Notice -->
+                    <div class="alert alert-primary border-0">
+                        <div class="row align-items-center">
+                            <div class="col-md-2 text-center">
+                                <i class="fas fa-rocket fa-2x text-primary"></i>
+                            </div>
+                            <div class="col-md-10">
+                                <h6 class="alert-heading">Demo Environment</h6>
+                                <p class="mb-0">This is a demonstration system showcasing task management capabilities. Your information helps us create a realistic demo experience.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fab fa-telegram me-2"></i>Add Telegram User
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Advanced Task Modal -->
+<div class="modal fade" id="advancedTaskModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #007bff 0%, #20c997 100%); color: white;">
+                <h5 class="modal-title">
+                    <i class="fas fa-tasks me-2"></i>Create Advanced Task (Demo)
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="advancedTaskForm" onsubmit="event.preventDefault(); createAdvancedTask();">
+                <div class="modal-body">
+                    <!-- Task Title -->
+                    <div class="mb-4">
+                        <label for="advancedTaskTitle" class="form-label">
+                            <i class="fas fa-heading me-1"></i>Task Title *
+                        </label>
+                        <input type="text" class="form-control form-control-lg" id="advancedTaskTitle" required
+                               placeholder="e.g., Check vehicle oil level">
+                        <div class="form-text">Clear, specific task description</div>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <label for="advancedTaskDescription" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>Task Description
+                        </label>
+                        <textarea class="form-control" id="advancedTaskDescription" rows="3"
+                                  placeholder="Detailed instructions for completing this task..."></textarea>
+                        <div class="form-text">Optional: Additional details and instructions</div>
+                    </div>
+                    
+                    <!-- Priority and Assignments Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <label for="advancedTaskPriority" class="form-label">
+                                <i class="fas fa-exclamation-circle me-1"></i>Priority
+                            </label>
+                            <select class="form-select form-select-lg" id="advancedTaskPriority">
+                                <option value="0">🟢 Low Priority</option>
+                                <option value="1" selected>🔵 Normal Priority</option>
+                                <option value="2">🟡 High Priority</option>
+                                <option value="3">🔴 Urgent</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="advancedTelegramUser" class="form-label">
+                                <i class="fab fa-telegram me-1"></i>Assign to User
+                            </label>
+                            <select class="form-select form-select-lg" id="advancedTelegramUser">
+                                <option value="">👤 Select user...</option>
+                                {% for user in users %}
+                                <option value="{{ user.id }}">
+                                    {{ user.first_name }}{% if user.username %} (@{{ user.username }}){% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="advancedTaskVehicle" class="form-label">
+                                <i class="fas fa-car me-1"></i>Vehicle
+                            </label>
+                            <select class="form-select form-select-lg" id="advancedTaskVehicle">
+                                <option value="">🚗 Select vehicle...</option>
+                                {% for vehicle in vehicles %}
+                                <option value="{{ vehicle.id }}">{{ vehicle.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Deadline -->
+                    <div class="mb-4">
+                        <label for="advancedTaskDeadline" class="form-label">
+                            <i class="fas fa-calendar-alt me-1"></i>Deadline (Optional)
+                        </label>
+                        <input type="datetime-local" class="form-control form-control-lg" id="advancedTaskDeadline">
+                        <div class="form-text">When should this task be completed?</div>
+                    </div>
+                    
+                    <!-- Quick Actions for Task Creation -->
+                    <div class="alert alert-info border-0">
+                        <div class="row align-items-center">
+                            <div class="col-md-2 text-center">
+                                <i class="fas fa-lightbulb fa-2x text-info"></i>
+                            </div>
+                            <div class="col-md-10">
+                                <h6 class="alert-heading">Quick Task Ideas</h6>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <button type="button" class="btn btn-outline-info btn-sm" onclick="setAdvancedQuickTask('Check vehicle oil level', 'Inspect oil level and quality, refill if necessary')">Oil Check</button>
+                                    <button type="button" class="btn btn-outline-info btn-sm" onclick="setAdvancedQuickTask('Fuel up vehicle', 'Fill vehicle fuel tank to full capacity')">Fuel Up</button>
+                                    <button type="button" class="btn btn-outline-info btn-sm" onclick="setAdvancedQuickTask('Clean vehicle interior', 'Vacuum and clean the inside of the vehicle')">Interior Clean</button>
+                                    <button type="button" class="btn btn-outline-info btn-sm" onclick="setAdvancedQuickTask('Deliver package', 'Pick up and deliver package to specified address')">Delivery</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus me-2"></i>Create Advanced Task
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function simulateReport() {
+    // Simulate photo report
+    alert('Demo: Photo report submitted! In a real system, this would process the photo and notify admin.');
+}
+
+function refreshData() {
+    // Refresh page data
+    location.reload();
+}
+
+function refreshRealData() {
+    // Refresh data via API without page reload
+    fetch('/api/tasks/')
+    .then(response => response.json())
+    .then(data => {
+        if (data.using_real_data) {
+            console.log('Real data refreshed:', data.total_count, 'tasks');
+            showNotification('Data Refreshed', `Loaded ${data.total_count} real tasks from Odoo`, 'info');
+        } else {
+            console.log('Using fallback demo data');
+            showNotification('Using Demo Data', 'Could not connect to Odoo, showing demo data', 'warning');
+        }
+        
+        // Refresh the page to show updated data
+        setTimeout(() => location.reload(), 1000);
+    })
+    .catch(error => {
+        console.error('Error refreshing data:', error);
+        showNotification('Refresh Error', 'Could not refresh data', 'error');
+    });
+}
+
+function showNotification(title, message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    const bgColor = {
+        'success': '#28a745',
+        'error': '#dc3545', 
+        'warning': '#ffc107',
+        'info': '#17a2b8'
+    }[type] || '#17a2b8';
+    
+    notification.innerHTML = `
+        <div id="notification-${Date.now()}" style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${bgColor};
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            z-index: 9999;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-family: Arial, sans-serif;
+            max-width: 350px;
+            animation: slideIn 0.3s ease-out;
+        ">
+            <strong>${title}</strong><br>
+            <small>${message}</small>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 4 seconds
+    setTimeout(() => {
+        if (notification && notification.parentNode) {
+            notification.style.animation = 'slideOut 0.3s ease-in';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+    }, 4000);
+}
+
+function copyCredentials() {
+    const credentials = `URL: demo.bidsolana.xyz/odoo
+Username: demo@bidsolana.xyz
+Password: 123test`;
+    
+    navigator.clipboard.writeText(credentials).then(function() {
+        // Show success message
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+        btn.classList.remove('btn-outline-secondary');
+        btn.classList.add('btn-success');
+        
+        setTimeout(function() {
+            btn.innerHTML = originalText;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-secondary');
+        }, 2000);
+    }).catch(function() {
+        alert('Credentials:\n\nURL: demo.bidsolana.xyz/odoo\nUsername: demo@bidsolana.xyz\nPassword: 123test');
+    });
+}
+
+// Add Telegram User Modal Functions
+function showAddUserModal() {
+    const modal = new bootstrap.Modal(document.getElementById('addUserModal'));
+    modal.show();
+}
+
+function createTelegramUser() {
+    const name = document.getElementById('userName').value.trim();
+    const telegramId = document.getElementById('telegramId').value.trim();
+    const username = document.getElementById('username').value.trim();
+    
+    // Basic validation
+    if (!name || !telegramId) {
+        alert('❌ Name and Telegram ID are required!');
+        return;
+    }
+    
+    // Validate Telegram ID format (must be numeric)
+    if (!telegramId.match(/^\d+$/)) {
+        alert('❌ Telegram ID must be a numeric value!');
+        return;
+    }
+    
+    // Validate name length
+    if (name.length < 2 || name.length > 50) {
+        alert('❌ Name must be between 2 and 50 characters!');
+        return;
+    }
+    
+    const formData = {
+        name: name,
+        telegram_id: telegramId,
+        username: username
+    };
+    
+    console.log('Creating Telegram user:', formData);
+    
+    fetch('/api/add-telegram-user/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const successMsg = `🎉 Success! Telegram user added to demo system!\n\n` +
+                              `✅ User: ${formData.name}\n` +
+                              `✅ Telegram ID: ${formData.telegram_id}\n` +
+                              `✅ Username: ${formData.username ? '@' + formData.username : 'Not provided'}\n` +
+                              `✅ User ID: ${data.user_id || 'Generated'}\n\n` +
+                              `🚀 Next steps:\n` +
+                              `• User can now receive task assignments\n` +
+                              `• User will appear in task assignment dropdown\n\n` +
+                              `The page will refresh to show the new user.`;
+            alert(successMsg);
+            
+            // Close modal and reset form
+            bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide();
+            document.getElementById('addUserForm').reset();
+            
+            // Refresh page after delay
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        } else {
+            let errorMsg = '❌ Error: ' + (data.message || 'Failed to create user');
+            
+            // Add specific guidance for common errors
+            if (data.message && data.message.includes('already exists')) {
+                errorMsg += '\n\n💡 This Telegram ID is already registered.\nPlease check the user list or use a different ID.';
+            } else if (data.message && data.message.includes('invalid')) {
+                errorMsg += '\n\n💡 Please verify your Telegram ID from @userinfobot\nand make sure it contains only numbers.';
+            }
+            
+            alert(errorMsg);
+        }
+    })
+    .catch(error => {
+        console.error('User creation error:', error);
+        alert('❌ Network error: ' + error.message);
+    });
+}
+
+// Advanced Task Modal Functions
+function showAdvancedTaskModal() {
+    const modal = new bootstrap.Modal(document.getElementById('advancedTaskModal'));
+    modal.show();
+}
+
+function setAdvancedQuickTask(title, description) {
+    document.getElementById('advancedTaskTitle').value = title;
+    document.getElementById('advancedTaskDescription').value = description;
+}
+
+function createAdvancedTask() {
+    const title = document.getElementById('advancedTaskTitle').value.trim();
+    const description = document.getElementById('advancedTaskDescription').value.trim();
+    const priority = document.getElementById('advancedTaskPriority').value;
+    const telegramUserId = document.getElementById('advancedTelegramUser').value;
+    const vehicleId = document.getElementById('advancedTaskVehicle').value;
+    const deadline = document.getElementById('advancedTaskDeadline').value;
+    
+    if (!title) {
+        alert('❌ Task title is required!');
+        return;
+    }
+    
+    // If user is selected, get their name for the success message
+    let assignedUserName = 'Unassigned';
+    if (telegramUserId) {
+        const userSelect = document.getElementById('advancedTelegramUser');
+        const selectedOption = userSelect.options[userSelect.selectedIndex];
+        assignedUserName = selectedOption.text;
+    }
+    
+    const formData = {
+        title: title,
+        description: description,
+        priority: priority || '1',
+        telegram_user_id: telegramUserId || null,
+        vehicle_id: vehicleId || null,
+        date_deadline: deadline || null
+    };
+    
+    console.log('Creating advanced demo task:', formData);
+    
+    fetch('/api/create-advanced-task/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Enhanced success message with user assignment info
+            const successMsg = `🎉 Advanced task created successfully!\n\n` +
+                              `✅ Title: ${formData.title}\n` +
+                              `✅ Priority: ${getPriorityText(formData.priority)}\n` +
+                              `✅ Assigned to: ${assignedUserName}\n` +
+                              `✅ Task ID: ${data.task_id || 'Generated'}\n\n` +
+                              `${telegramUserId ? '📱 Telegram notification will be sent!' : '📝 Task created without assignment'}\n\n` +
+                              `The page will refresh to show the new task.`;
+            alert(successMsg);
+            
+            bootstrap.Modal.getInstance(document.getElementById('advancedTaskModal')).hide();
+            document.getElementById('advancedTaskForm').reset();
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            alert('❌ Error: ' + (data.message || 'Failed to create advanced task'));
+        }
+    })
+    .catch(error => {
+        console.error('Advanced task creation error:', error);
+        alert('❌ Error creating advanced task: ' + error.message);
+    });
+}
+
+// Helper function for priority text
+function getPriorityText(priority) {
+    switch(priority) {
+        case '0': return 'Low Priority';
+        case '1': return 'Normal Priority';
+        case '2': return 'High Priority';
+        case '3': return 'Urgent';
+        default: return 'Normal Priority';
+    }
+}
+
+// Auto-refresh data every 30 seconds in demo
+setInterval(function() {
+    console.log('Auto-refreshing demo data...');
+}, 30000);
+
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+</script>
+{% endblock %}
