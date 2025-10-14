@@ -26,7 +26,7 @@ Visit the live demo at: **https://django.bidsolana.xyz/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/rosciper/DjangoOdooBridge.git
+git clone https://github.com/RoSciPer/DjangoOdooBridge.git
 cd DjangoOdooBridge
 ```
 
@@ -101,7 +101,7 @@ This project is open source and available under the MIT License.
 
 - **Live Demo**: https://django.bidsolana.xyz/dashboard/
 - **Full Odoo Demo**: https://demo.bidsolana.xyz/odoo
-- **GitHub**: https://github.com/rosciper/DjangoOdooBridge
+- **GitHub**: https://github.com/RoSciPer/DjangoOdooBridge
 
 ## 🎯 Purpose
 
