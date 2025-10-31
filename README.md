@@ -178,12 +178,13 @@ python manage.py runserver 0.0.0.0:8080
 ## 🔗 Related Projects
 
 - **Demo URLs**: 
-  - Production Odoo: `https://odoo.bidsolana.xyz`
+  
   - Demo Odoo: `https://demo.bidsolana.xyz` 
   - Django Bridge: `https://django.bidsolana.xyz` (this project)
 
 ## 📱 Features
-
+  - Production Odoo: `https://bidsolana.xyz`
+  - 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
