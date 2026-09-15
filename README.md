@@ -13,24 +13,15 @@ A powerful Django-based bridge system that connects Odoo ERP with Telegram Bot A
 - **📊 Dashboard Interface** - Clean, responsive web interface
 - **🔄 Real-time Updates** - Live data synchronization with caching
 
-## 🚀 Live Demo
-
-Visit the live demo at: **https://django.bidsolana.xyz/
-
-### Full Odoo Access
-- **URL**: https://demo.bidsolana.xyz/odoo
-- **Username**: `demo@bidsolana.xyz`
-- **Password**: `123test`
-
-## � Requirements
+## 📦 Requirements
 
 - **Python 3.12+** with Django 5.2.7
 - **Odoo ERP System** (16.0+ recommended)
-- **Odoo Custom Addon**: `telegram_task_manager_2` 
+- **Odoo Custom Addon**: `telegram_task_manager_2`
 - **Telegram Bot** with API token
 - **PostgreSQL/SQLite** database
 
-## �🛠️ Installation
+## 🛠️ Installation
 
 1. **Clone the repository**
 ```bash
@@ -123,27 +114,10 @@ To set up your own Telegram bot:
 - **Vehicle Assignment** for logistics tasks
 - **Report Generation** and tracking
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 🔗 Links
-
-- **Live Demo**: https://django.bidsolana.xyz/dashboard/
-- **Full Odoo Demo**: https://demo.bidsolana.xyz/odoo
-- **GitHub**: https://github.com/RoSciPer/DjangoOdooBridge
-
 ## 🎯 Purpose
 
 - **Marketing Demo**: Interactive showcase for potential clients
-- **Live Testing**: Real Telegram bot integration  
+- **Live Testing**: Real Telegram bot integration
 - **Feature Presentation**: Core functionality demonstration
 - **Performance**: Fast, lightweight alternative to full Odoo demo
 
@@ -154,8 +128,8 @@ telegram_showcase_django/
 ├── manage.py
 ├── telegram_showcase/     # Django project settings
 ├── showcase/             # Main app
-├── requirements.txt      
-└── README.md            
+├── requirements.txt
+└── README.md
 ```
 
 ## 🚀 Setup
@@ -175,25 +149,25 @@ python manage.py migrate
 python manage.py runserver 0.0.0.0:8080
 ```
 
-## 🔗 Related Projects
+## 🤝 Contributing
 
-- **Demo URLs**: 
-  
-  - Demo Odoo: `https://demo.bidsolana.xyz` 
-  - Django Bridge: `https://django.bidsolana.xyz` (this project)
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-## 📱 Features
-  - Production Odoo: `https://bidsolana.xyz`
-  - 
+## 🔗 Links
+
+- **GitHub**: https://github.com/RoSciPer/DjangoOdooBridge
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ### What this means:
 - ✅ **Free to use** - Personal and commercial use
-- ✅ **Modify freely** - Adapt to your needs  
+- ✅ **Modify freely** - Adapt to your needs
 - ✅ **Distribute** - Share with others
 - ✅ **Private use** - Use in closed-source projects
 - ⚠️ **No warranty** - Use at your own risk
 - 📋 **Attribution required** - Keep copyright notice
-- [ ] Lead generation forms
